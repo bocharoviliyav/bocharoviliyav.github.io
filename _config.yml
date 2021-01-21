@@ -10,5 +10,6 @@ github_username:  bocharoviliyav
 # Build settings
 markdown: kramdown
 theme: jekyll-theme-midnight
-google_analytics: G-PE6HGY6KFF
-# plugins:
+google_analytics: 259558923
+plugins:
+  - jekyll-feed
