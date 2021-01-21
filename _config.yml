@@ -10,6 +10,11 @@ github_username:  bocharoviliyav
 # Build settings
 markdown: kramdown
 theme: minima
-google_analytics: 259558923
+
+jekyll_analytics:
+  GoogleAnalytics:
+    id: 259558923
+
 plugins:
   - jekyll-feed
+  - jekyll-analytics
