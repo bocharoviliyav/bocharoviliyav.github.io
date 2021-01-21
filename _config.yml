@@ -16,4 +16,5 @@ jekyll_analytics:
     id: 259558923
 
 plugins:
+  - jekyll-feed
   - jekyll-analytics
