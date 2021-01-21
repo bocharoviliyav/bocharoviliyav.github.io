@@ -1,11 +1,15 @@
 ---
 layout: page
-title: About
+title: Author
 permalink: /about/
 ---
+<img src="./assets/img.png"  width="204" height="358"/>
 
-Hi all! My name is Ilia Bocharov. 
-I'm fullstack developer. 
-My main programming language is Java, i've writing code on Java since 2015. 
-In 2018 i've started write on Typescript and very excited with it.
-I'm currently learning Rust and want to share part of my experience here.
+Hi all! My name is Ilia Bocharov.
+
+
+I'm a fullstack developer. 
+My main programming language is Java, I've been writing code on Java since 2015. 
+In 2018, I started to write on Typescript, and I'm very excited with it.
+I'm currently learning Rust and improving my Java skills.
+I want to share part of my experience here.

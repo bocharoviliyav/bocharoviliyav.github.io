@@ -1,4 +1,5 @@
 title: Yet another fullstack developer blog
+author: Ilia Bocharov
 email: bocharoviliav@gmail.com
 description: >-
   Java, Typescript, Rust and DevOps stuff will be here.
@@ -6,6 +7,8 @@ baseurl: ""
 url: "https://bocharoviliyav.github.io"
 twitter_username: bocharoviliyav
 github_username:  bocharoviliyav
+linkedin_username: bocharoviliyav
+telegram_username: bocharoviliyav
 
 # Build settings
 markdown: kramdown
@@ -16,5 +19,4 @@ jekyll_analytics:
     id: 259558923
 
 plugins:
-  - jekyll-feed
   - jekyll-analytics
