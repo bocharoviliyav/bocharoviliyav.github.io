@@ -9,7 +9,7 @@ github_username:  bocharoviliyav
 
 # Build settings
 markdown: kramdown
-theme: jekyll-theme-midnight
+theme: minima
 google_analytics: 259558923
 plugins:
   - jekyll-feed
