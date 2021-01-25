@@ -3,7 +3,7 @@ layout: page
 title: Author
 permalink: /about/
 ---
-<img src="./assets/img.png"  width="204" height="358"/>
+<img src="/assets/images/about/img.png"  width="204" height="358"/>
 
 Hi all! My name is Ilia Bocharov.
 
