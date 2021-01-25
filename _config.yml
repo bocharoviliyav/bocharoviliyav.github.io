@@ -9,14 +9,9 @@ twitter_username: bocharoviliyav
 github_username:  bocharoviliyav
 linkedin_username: bocharoviliyav
 telegram_username: bocharoviliyav
+google_analytics: G-PE6HGY6KFF
 
 # Build settings
 markdown: kramdown
 theme: minima
 
-jekyll_analytics:
-  GoogleAnalytics:
-    id: 259558923
-
-plugins:
-  - jekyll-analytics
