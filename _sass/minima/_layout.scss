@@ -5,7 +5,6 @@
   //border-top: 5px solid $text-color;
   //border-bottom: 1px solid $text-color;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25);
-  backdrop-filter: blur(1px);
   min-height: $spacing-unit * 1.865;
 
   // Positioning context for the mobile navigation icon
@@ -58,11 +57,10 @@
 
   @include media-query($on-palm) {
     position: absolute;
-    top: 9px;
-    right: $spacing-unit / 2;
-    background-color: $background-color;
-    border: 1px solid $grey-color-light;
-    border-radius: 5px;
+    top: 20px;
+    right: $spacing-unit / 2.2;
+    box-shadow: 0 0px 10px rgba(183,183,183,0.1);
+    border-radius: 10px;
     text-align: right;
 
     label[for="nav-trigger"] {
@@ -117,9 +115,7 @@
  * Site footer
  */
 .site-footer {
-  //border-top: 1px solid $grey-color-light;
   box-shadow: 0px -14px 28px rgba(0,0,0,0.25);
-  backdrop-filter: blur(1px);
   padding: $spacing-unit/2 0;
 }
 
@@ -231,7 +227,7 @@
 
 .post-title {
   color: $brand-color;
-  text-shadow: 2px 2px 20px $text-color;
+  text-shadow: 2px 2px 28px $text-color;
   @include relative-font-size(2.625);
   letter-spacing: -1px;
   line-height: 1;
@@ -266,5 +262,9 @@
     @include media-query($on-laptop) {
       @include relative-font-size(1.125);
     }
+  }
+  img {
+    max-width: 100%;
+    height: auto;
   }
 }

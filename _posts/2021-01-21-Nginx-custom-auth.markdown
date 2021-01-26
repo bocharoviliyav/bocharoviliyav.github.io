@@ -4,7 +4,7 @@ title:  "Using Nginx to implement custom authorization in Keycloak"
 date:   2021-01-21 23:37:26 +0400
 categories: devops
 ---
-Привет, читатель!
+Hi all!
 
 Уже написано большое количество материала про NGINX, однако, и его возможности
 велики.
@@ -24,7 +24,17 @@ categories: devops
 NGINX имеет поддержку языка Lua, связка которых и будет использоваться для решения проблемы.
 
 Для начала необходимо создать клиента в KeyCloak.
+
+
+<img src="/assets/images/nginx_keycloak/add_realm.png"/>
+
+
 Зададим ID клиента, укажем бизнес роли, сохраним секрет клиента.
+
+<img src="/assets/images/nginx_keycloak/client_creation.png"/>
+
+
+<img src="/assets/images/nginx_keycloak/client_secret.png"/>
 Подробнее о OIDC Clients вы можете прочитать в документации
 [глава 8 Managing Clients](https://www.keycloak.org/docs/latest/server_admin/#_clients). Также необходимо запомнить id реалма, в котором был создан клиент.
 
