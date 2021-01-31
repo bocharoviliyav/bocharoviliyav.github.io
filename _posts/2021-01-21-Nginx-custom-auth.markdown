@@ -53,29 +53,27 @@ load_module modules/ngx_http_lua_module.so;
 токен и новая сессия, заранее предусмотрим кеширование токена. Для этого в блоке
 http укажем глобальную переменную:
 {% highlight lua %}
-lua_shared_dict our_cache 10m;
+lua_shared_dict custom_cache 10m;
 {% endhighlight %}
 В блоке server укажем перенаправление запроса и обработкой скриптом:
 {% highlight conf %}
-location /external_api { 
-  rewrite_by_lua_block {
-    require("our_script")()
-  }  
-proxy_pass /internal_path; 
+location /in {
+  rewrite_by_lua_block { require("convertor")() }
+  proxy_pass http://172.20.0.1:8082/out;
 }
 {% endhighlight %}
-Таким образом, запросы, послупающие по адресу /external_api будут обработаны скриптом
-и перенаправлены на /internal_path. Скрипт может находится в отдельном файле,а может
+Таким образом, запросы, поступающие по адресу /in будут обработаны скриптом
+и перенаправлены на /out. Скрипт может находится в отдельном файле, а может
 быть написан непосредственно в блоке rewrite_by_lua_block.
 Осталось написать логику обработки запроса.
 
-В файле our_script будет находиться анонимная функция:
+В файле convertor.lua будет находиться анонимная функция:
 
     return function()
 
 Внутри которой объявим переменную для доступа к кешу:
 {% highlight lua %}
-local ourCache = ngx.shared.our_cache
+local customCache = ngx.shared.custom_cache
 {% endhighlight %}
 Затем нужно получить заголовки запроса внешней системы. В качестве таких
 заголовков для примера будут данные клиента KeyCloak. Для упрощения положим, что данные
@@ -83,10 +81,9 @@ local ourCache = ngx.shared.our_cache
 что это крайне небезопасно, нужно использовать соответствующие заголовки(например в случае с парой id-секрет
 можно использовать Authorization header).
 {% highlight lua %}
-local headers = ngx.req.get_headers()
-local realm = headers["realm"]
-local clientId = headers["clientId"]
-local secret = headers["secret"]
+local realm = ngx.req.get_headers()["realm"]
+local client = ngx.req.get_headers()["client"]
+local secret = ngx.req.get_headers()["secret"]
 {% endhighlight %}
 Для обращения к KeyCloak используем http:
 {% highlight lua %}
@@ -98,25 +95,27 @@ local err
 {% endhighlight %}
 Попробуем получить токен из кеша, и пройти его валидацию:
 {% highlight lua %}
-local accessTokenFromCache = ourCache:get(clientId)
+local accessTokenFromCache = customCache:get(clientIdentity)
 if accessTokenFromCache ~= nil then
-    local bearerHeaderFromCache = string.format("Bearer %s", accessTokenFromCache)
-    response, err = httpClient:request_uri(ngx.var.idp ..
-            '/auth/realms/' .. realm .. '/protocol/openid-connect/userinfo', {
-        method = "GET",
-        headers = {
-            ["Authorization"] = bearerHeaderFromCache,
-        }
-    })
-end
+local bearerHeaderFromCache = string.format("Bearer %s", accessTokenFromCache)
+-- Get user info to token validation
+
+        response, err = httpClient:request_uri(keycloakUrl ..
+                '/auth/realms/' .. realm .. '/protocol/openid-connect/userinfo', {
+            method = "GET",
+            headers = {
+                ["Authorization"] = bearerHeaderFromCache,
+            }
+        })
+    end
 {% endhighlight %}
 Если токена нет в кеше, или он просрочен, отправим запрос на получение нового токена:
 {% highlight lua %}
-response, err = httpClient:request_uri(ngx.var.idp ..
+response, err = httpClient:request_uri(keycloakUrl ..
         '/auth/realms/' .. realm .. '/protocol/openid-connect/token', {
     method = "POST",
     body = ngx.encode_args({
-        client_id = clientId,
+        client_id = client,
         grant_type = 'client_credentials',
         client_secret = secret
     }),
@@ -129,21 +128,28 @@ response, err = httpClient:request_uri(ngx.var.idp ..
 {% highlight lua %}
 local json = require "json"
 local newAccessToken = json.decode(response.body)['access_token']
-ourCache:set(clientId, newAccessToken)
+customCache = ngx.shared.custom_cache
+customCache:set(clientIdentity, newAccessToken)
 {% endhighlight %}
 
 Для исходного запроса удалим заголовки с данными клиента и запишем новый с JWT
 токеном клиента.
 {% highlight lua %}
-local accessToken = ourCache:get(clientId)
+local accessToken = customCache:get(clientIdentity)
 local bearerHeader = string.format("Bearer %s", accessToken)
-
 ngx.req.set_header("Authorization", bearerHeader)
+
 ngx.req.clear_header("realm")
-ngx.req.clear_header("clientId")
+ngx.req.clear_header("client")
 ngx.req.clear_header("secret")
 {% endhighlight %}
 
+Далее необходимо со стороны клиента передавать необходимые заголовки: 
+realm, client, secret.
+
+<img src="/assets/images/nginx_keycloak/postman.png"/>
+
 Таким образом, с помощью NGINX и Lua, возможно решить проблему интеграции с внешними
 системами, которые не поддерживают полноценную OAuth авторизацию.
-Всем добра!
+
+Исходный код и обвязка для проверки доступна на [github](https://github.com/bocharoviliyav/nginx-lua-keycloak-example).
