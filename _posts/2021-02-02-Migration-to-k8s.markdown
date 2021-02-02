@@ -4,17 +4,17 @@ title:  "Migration java application to kubernetes"
 date:   2021-02-02 00:13:00 +0400
 categories: java
 ---
-In this article I want to introduce check list that can to be followed when you 
+In this article I want to introduce check list that can be followed when you 
 migrate java application to k8s.
 Let's highlight two main types of application:
 1. Java application with Spring Boot
 2. Old Java application manually deployed on Tomcat server
 
-Some rules applied to both type, but some rules applied only for second category.
+Some rules applied to both type, but other rules applied only for second category.
 
 ### Project must contain k8s configuration
 
-In general cases you can add k8s/deployment.yaml. Examples available in 
+Typically you can add k8s/deployment.yaml. Examples available in 
 [k8s documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 
 ### Project should contain ignore files
@@ -54,7 +54,7 @@ gen
 
 ### Dockerfile
 Docker file used to image creation.
-Image usually contain few layers: os, management soft, jdk, application itself.
+Image usually contain few layers: os, auxiliary soft, jdk, application itself.
 In this example os - ubuntu, jdk installed manually and Spring Boot "fat" jar as application.
 {% highlight docker %}
 FROM ubuntu:20.04
@@ -118,9 +118,15 @@ source to OS Environment variables.
 
 Next steps are copy Application.war to tmp directory, removing Tomcat default 
 project, unzip Application as root Tomcat application and removing temporary 
-files. Then set java and tomcat running options.
+files. Then set java and tomcat running options. You can set your own 
+properties. That properties can be used in the server.xml and should be called with -D
+prefix.
 
-Last step is Tomcat running.
+Last step is Tomcat running. If any utility soft are needed, create start script, copy into image
+and run in CMD/ENTRYPOINT. 
+
+Remember that all tools started in RUN section available only in
+image creation phase! If you need any daemons, create and run script.
 
 ### Prepare application to Prometheus
 #### For Spring Boot Application
@@ -175,22 +181,18 @@ In pom.xml add necessary dependencies:
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-core</artifactId>
-    <version>${dependency.micrometer-prom.version}</version>
 </dependency>
 <dependency>
     <groupId>io.micrometer</groupId>
     <artifactId>micrometer-registry-prometheus</artifactId>
-    <version>${dependency.micrometer-prom.version}</version>
 </dependency>
 <dependency>
     <groupId>io.prometheus</groupId>
     <artifactId>simpleclient</artifactId>
-    <version>${dependency.prometheus.version}</version>
 </dependency>
 <dependency>
     <groupId>io.prometheus</groupId>
     <artifactId>simpleclient_servlet</artifactId>
-    <version>${dependency.prometheus.version}</version>
 </dependency>
 {% endhighlight %}
 
@@ -213,7 +215,9 @@ import io.prometheus.client.CollectorRegistry;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
+/**
+  * The Prometheus Listener for metrics binding.
+  */
 public class PrometheusInitListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
@@ -260,7 +264,7 @@ in security-context.xml add:
     <http pattern="/metrics/prom" security="none"/>
 {% endhighlight %}
 
-In Grafana you can use [JVM dashboard](https://grafana.com/grafana/dashboards/4701)
+Useful Grafana [JVM dashboard](https://grafana.com/grafana/dashboards/4701).
 
 ### You can redefine jar/war name for docker
 In pom.xml in build section define the final name:
@@ -277,7 +281,6 @@ For Spring Boot application add official dependency:
 <dependency>
     <groupId>com.oracle.database.jdbc</groupId>
     <artifactId>ojdbc8</artifactId>
-    <version>${ojdbc8.version}</version>
 </dependency>
 {% endhighlight %}
 For web application you should add this driver in dockerfile to 
@@ -286,12 +289,11 @@ For web application you should add this driver in dockerfile to
 ADD path-to-repo/ojdbc8.jar /usr/local/tomcat/lib
 {% endhighlight %}
 
-and in maven define driver as provided:
+and in the maven define driver as provided:
 {% highlight xml %}
 <dependency>
     <groupId>com.oracle.database.jdbc</groupId>
     <artifactId>ojdbc8</artifactId>
-    <version>${ojdbc8.version}</version>
     <scope>provided</scope>
 </dependency>
 {% endhighlight %}
@@ -308,7 +310,10 @@ In pom.xml:
     <spring.version>4.4.4.RELEASE</spring.version>
 </properties>
 {% endhighlight %}
-
+After that use this variable in dependency version:
+{% highlight xml %}
+<version>${spring.version}</version>
+{% endhighlight %}
 ### Don't forget useful readme.md
 Describe how you can build and run application:
 {% highlight console %}
@@ -386,8 +391,10 @@ spring:
 # any prod props
 {% endhighlight %}
 
-
-
+Choose necessary profile as running arguments:
+{% highlight console %}
+java -jar Application.jar --spring.profiles.active=dev
+{% endhighlight %}
 ### Use logback-spring.xml for log configuration.
 
 For example, if you use console logger like below:
@@ -420,11 +427,38 @@ You can print log in JSON format also.
 </configuration>
 {% endhighlight %}
 
+For Tomcat based application log4j.xml can print JSON too.
+{% highlight xml %}
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+<appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+    <param name="target" value="System.out" />
+        <layout class="org.apache.log4j.PatternLayout">
+        <param name="ConversionPattern" value='{"level":"%p","message":"%m"}%n'/>
+        </layout>
+</appender>
+<root>
+    <appender-ref ref="CONSOLE" />
+</root>
+</log4j:configuration>
+{% endhighlight %}
+
+For container memory leak avoiding in logging.properties
+disable file log appenders:
+{% highlight properties %}
+handlers = java.util.logging.ConsoleHandler
+.handlers = java.util.logging.ConsoleHandler
+java.util.logging.ConsoleHandler.level = FINE
+java.util.logging.ConsoleHandler.formatter = java.util.logging.SimpleFormatter
+java.util.logging.SimpleFormatter.format={"level":"%4$s","message": "%5$s%6$s"}%n
+java.util.logging.ConsoleHandler.encoding = UTF-8
+{% endhighlight %}
 ### Use Swagger
 
 {% highlight java %}
 /**
-* The Swagger config.
+  * The Swagger config.
   */
   @Configuration
   @Profile({"!prod && (dev || test)"})
@@ -458,7 +492,7 @@ You can print log in JSON format also.
 If you use @EnableWebMvc in your application add ResourceHandlers:
 {% highlight java %}
 /**
-* The Web application configuration class.
+  * The Web application configuration class.
   */
   @Configuration
   @EnableWebMvc
