@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Migration java application to kubernetes"
+title:  "Migration Java application to Kubernetes"
 date:   2021-02-02 00:13:00 +0400
 categories: java
 ---

@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Migration java application to kubernetes. Monolith"
+title:  "Migration Java application to Kubernetes. Monolith"
 date:   2021-02-03 00:03:00 +0400
 categories: java
 ---
@@ -10,7 +10,7 @@ In general, we have the same application as Spring Boot, but there are few major
 that need to be highlighted.
 
 ### Dockerfile
-In this example dockerfile contains ubuntu, tomcat server and jar/war as application.
+In this example dockerfile contains Ubuntu, Tomcat server and jar/war as application.
 
 {% highlight docker %}
 FROM ubuntu:20.04
@@ -51,7 +51,7 @@ CMD["./usr/local/tomcat/bin/catalina.sh", "run"]
 
 Image based on Ubuntu. Exposed on 8080 port.
 
-Second step is jdk, unzip and wget installation.
+Second step is JDK, unzip and wget installation.
 
 The third step is downloading Tomcat server and unpacking.
 
