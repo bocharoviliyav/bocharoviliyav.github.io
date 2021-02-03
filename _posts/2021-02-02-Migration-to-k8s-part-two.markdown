@@ -210,7 +210,9 @@ java.util.logging.ConsoleHandler.encoding = UTF-8
 You can do it in Dokerfile by replacing original logging.properties with COPY/ADD or
 you can use script like in example below:
 {% highlight docker %}
-    RUN rm /usr/local/tomcat/conf/logging.properties && echo -e ${log-config} >> /usr/local/tomcat/conf/logging.properties
+    ARG log-config
+    RUN rm /usr/local/tomcat/conf/logging.properties && echo -e $log-config >> /usr/local/tomcat/conf/logging.properties
 {% endhighlight %}
+Don't forget to set the docker build-args!
 
 If ${log-config} are multiline use /n at the end of each line.
