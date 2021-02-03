@@ -4,13 +4,13 @@ title:  "Migration Java application to Kubernetes"
 date:   2021-02-02 00:13:00 +0400
 categories: java
 ---
-In this article I want to introduce check list that can be followed when you 
+In this article, I want to introduce a checklist that can be followed when you
 migrate java application to k8s.
 Let's highlight two main types of application:
 1. Java application with Spring Boot
 2. Old Java application manually deployed on Tomcat server
 
-Some rules applied to both type, but other rules applied only for second category.
+Some rules applied to both types, but other rules applied only for the second category.
 
 ### Project must contain k8s configuration
 
@@ -54,29 +54,26 @@ gen
 
 ### Dockerfile
 Docker file used to image creation.
-Image usually contain few layers: os, auxiliary soft, jdk, application itself.
-In this example os - ubuntu, jdk installed manually and Spring Boot "fat" jar as application.
+The image usually contains few layers: os, auxiliary soft, JDK, application itself.
+In this example, OS - Ubuntu, JDK installed manually and Spring Boot "fat" jar as application.
 {% highlight docker %}
 FROM ubuntu:20.04
 
 EXPOSE 8080
 
 RUN apt-get update && \
-apt-get install -y openjdk-8-jdk
+    apt-get install -y openjdk-8-jdk
 
 WORKDIR /app
 COPY target/Application.jar .
 CMD["java", "$JAVA_OPTS","-Djava.security.egd=file:/dev/./urandom", "-jar", "Application.jar"]
 {% endhighlight %}
 
-
-Remember that all tools started in RUN section available only in
-image creation phase! If you need any daemons, create and run script.
+Remember that all tools started in RUN section available only in the
+image creation phase! If you need any daemons, create and run the script.
 
 ### Prepare application to Prometheus
-#### For Spring Boot Application
-
-In pom.xml add necessary dependencies:
+In pom.xml, add necessary dependencies:
 {% highlight xml %}
 <dependency>
     <groupId>org.springframework.boot</groupId>
@@ -122,7 +119,7 @@ endpoints:
 Useful Grafana [JVM dashboard](https://grafana.com/grafana/dashboards/4701).
 
 ### You can redefine jar/war name for docker
-In pom.xml in build section define the final name:
+In pom.xml, in build tag define the final name:
 {% highlight xml %}
 <build>
     <finalName>Application</finalName>
@@ -130,8 +127,8 @@ In pom.xml in build section define the final name:
 {% endhighlight %}
 
 
-### If Oracle database are used
-For Spring Boot application add official dependency:
+### If you are using Oracle database
+For Spring Boot application add the official dependency:
 {% highlight xml %}
 <dependency>
     <groupId>com.oracle.database.jdbc</groupId>
@@ -152,18 +149,18 @@ In pom.xml:
     <spring.version>4.4.4.RELEASE</spring.version>
 </properties>
 {% endhighlight %}
-After that use this variable in dependency version:
+After that, use this variable in the dependency version:
 {% highlight xml %}
 <version>${spring.version}</version>
 {% endhighlight %}
 ### Don't forget useful readme.md
-Describe how you can build and run application:
+Describe how you can build and run the application:
 {% highlight console %}
 mvn clean package -D maven.test.skip=true // without tests running
 //or
-mvn clean install -D spring.profiles.active=test // with defining Spring profile for test
+mvn clean install -D spring.profiles.active=test // with defining Spring profile for tests
 //or
-docker build -t your/application:1 && docker-compose up // build and up image if docker compose used
+docker build -t your/application:1 && docker-compose up // build and up the image if docker-compose is used
 {% endhighlight %}
 Define how you can build JavaDocs:
 {% highlight console %}
@@ -180,7 +177,7 @@ Write application service endpoints:
 
 /monitor/health/readiness - readiness probe
 
-Describe all Environment variable that your application needs:
+Describe all environment variables that your application need:
 1. APP_PORT
 1. JDBC_DATABASE
 
@@ -191,7 +188,7 @@ spring:
   profiles:
     active: stage
 
-# graceful shutdown. Waiting period for active requests completion
+# Graceful shutdown. Waiting period for active requests completion
 lifecycle:
   timeout-per-shutdown-phase: 20s
 # ==========================
@@ -239,13 +236,13 @@ java -jar Application.jar --spring.profiles.active=dev
 {% endhighlight %}
 ### Use logback-spring.xml for log configuration.
 
-For example, if you use console logger like below:
+For example, if you use a console logger like below:
 {% highlight java %}
 private static final Logger CONSOLE_LOGGER = LoggerFactory.getLogger("console");
 {% endhighlight %}
 
-in logback-spring.xml you can define that for only for dev profile all Spring log
-should be available. Otherwise, only your logs will be printed.
+In logback-spring.xml, you can define that only for the dev profile all Spring logs are available.
+Otherwise, only yours will print.
 
 You can print log in JSON format also.
 {% highlight xml %}
@@ -304,7 +301,7 @@ You can print log in JSON format also.
 {% endhighlight %}
 
 
-If you use @EnableWebMvc in your application add ResourceHandlers:
+If you use @EnableWebMvc in your application, add ResourceHandlers:
 {% highlight java %}
 /**
   * The Web application configuration class.
@@ -335,11 +332,11 @@ If you use @EnableWebMvc in your application add ResourceHandlers:
 package io.github.bocharoviliyav.app; 
 {% endhighlight %}
 
-You can use IDEA plugin for primitive JavaDoc generation: install JavaDoc by Sergey Timofiychuk
-and in Java file press Ctrl+Alt+Shift+G
+You can use the IDEA plugin for primitive JavaDoc generation: install JavaDoc by Sergey Timofiychuk
+and in the Java file press Ctrl+Alt+Shift+G
 
 ### Check your code 
 Use CheckStyle, Sonarqube.
 
-For IDEA CheckStyle plugin exists.
-In toolbar on CheckStyle tab choose Rules: Sun Checks and run project validation.
+For IDEA CheckStyle plugin exists. 
+In the toolbar on the CheckStyle, tab chooses Rules: Sun Checks and start project validation.

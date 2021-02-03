@@ -4,68 +4,69 @@ title:  "Migration Java application to Kubernetes. Monolith"
 date:   2021-02-03 00:03:00 +0400
 categories: java
 ---
-This article is the thoughts about additional steps that needs for monolith installation in k8s. 
+This article is the thoughts about additional steps that need for monolith installation in k8s.
 
-In general, we have the same application as Spring Boot, but there are few major things
-that need to be highlighted.
+There is the same application as Spring Boot, but a few main things need highlighting.
 
 ### Dockerfile
-In this example dockerfile contains Ubuntu, Tomcat server and jar/war as application.
+In this example, Dockerfile contains Ubuntu, Tomcat server, and jar/war as application.
 
 {% highlight docker %}
-FROM ubuntu:20.04
+FROM ubuntu:20.04 as application
+
+COPY target/Application.war /tmp
 
 RUN apt-get update && \
-    apt-get upgrade -y && \
     apt-get install -y unzip && \
-    apt-get install -y openjdk-8-jdk && \
-    apt-get install -y wget
-
-RUN mkdir /usr/local/tomcat && \
+    apt-get install -y wget && \
+    mkdir /usr/local/tomcat && \
     wget https://apache-mirror.rbc.ru/pub/apache/tomcat/tomcat-9/v9.0.41/bin/apache-tomcat-9.0.41.tar.gz -O /tmp/tomcat.tar.gz && \
     cd /tmp && \
     tar xvfz tomcat.tar.gz && \
     cp -Rv /tmp/apache-tomcat-9.0.41/* /usr/local/tomcat/ && \
-    echo "org.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.digester.EnvironmentPropertySource" >> /usr/local/tomcat/conf/catalina.properties
-
-COPY target/Application.war /tmp
-
-RUN rm -rf /usr/local/tomcat/webapps/examples && \
+    echo "org.apache.tomcat.util.digester.PROPERTY_SOURCE=org.apache.tomcat.util.digester.EnvironmentPropertySource" >> /usr/local/tomcat/conf/catalina.properties && \
+    rm -rf /usr/local/tomcat/webapps/examples && \
     rm -rf /usr/local/tomcat/webapps/docs && \
     rm -rf /usr/local/tomcat/webapps/ROOT && \
-    unzip /tmp/Application.war -d /usr/local/tomcat/webapps/ROOT && \
-    rm -rf /tmp/apache-tomcat-9.0.41 && \
     rm -rf /usr/local/tomcat/webapps/host-manager && \
     rm -rf /usr/local/tomcat/webapps/manager && \
-    rm /tmp/tomcat.tar.gz && \
-    rm /tmp/Application.war
+    unzip /tmp/Application.war -d /usr/local/tomcat/webapps/ROOT
 
-RUN export CATALINA_HOME="/usr/local/tomcat" && \
-    export PATH="$PATH:$CATALINA_HOME/bin"  && \
-    export CATALINA_OPTS="$CATALINA_OPTS -server"  && \
-    export CATALINA_OPTS="$CATALINA_OPTS ${JAVA_OPTS}"  && \
-    export CATALINA_OPTS="$CATALINA_OPTS -DCUSTOM_OPTION=${ENV_OPTION}"
+FROM ubuntu:20.04
+EXPOSE 8080
+COPY --from=application /usr/local/tomcat /usr/local/tomcat
+COPY ./setenv.sh                          /usr/local/tomcat/bin
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y openjdk-8-jdk
 
 CMD["./usr/local/tomcat/bin/catalina.sh", "run"]
 {% endhighlight %}
 
-Image based on Ubuntu. Exposed on 8080 port.
 
-Second step is JDK, unzip and wget installation.
+This docker image is a little tricky. There is a multistage docker image creation.
+The first stage is for Tomcat preparation. We don't need additional soft for application runtime. But we need it to get and unpack Tomcat, copy and extract web application.
+The first step is the application copying. The second step is a complex shell script that includes: additional soft installation, downloading the Tomcat server, setting PROPERTY_SOURCE for using OS environment variables in Tomcat configurations, removing default Tomcat projects and manager, unzipping web application.
 
-The third step is downloading Tomcat server and unpacking.
+The next stage of the dockerfile is copying installed Tomcat with the web application from the previous step into the current layer,
+then upgrading system libs and JDK installation. The last step CMD/ENTRYPOINT definition.
 
-Setting PROPERTY_SOURCE is optional. That echo operation change tomcat property
-source to OS Environment variables.
+In setenv.ev file you can add any Tomcat and Java startup parameters:
 
-Next steps are copy Application.war to tmp directory, removing Tomcat default
-project, unzip Application as root Tomcat application and removing temporary
-files. Then set java and tomcat running options. You can set your own
-properties. That properties can be used in the server.xml and should be called with -D
-prefix.
+{% highlight console %}
+#!/bin/bash
+# Tomcat variables
+export CATALINA_HOME="/usr/local/tomcat"
+export PATH="$PATH:$CATALINA_HOME/bin"
+# Java variables
+export CATALINA_OPTS="$CATALINA_OPTS -server"
+export CATALINA_OPTS="$CATALINA_OPTS ${JAVA_OPTS}"
+# Custom variables that can be used in Tomcat server.xml or Java
+export CATALINA_OPTS="$CATALINA_OPTS -DCUSTOM_OPTION=${ENV_OPTION}"
 
-Last step is Tomcat running. If any utility soft are needed, create start script, copy into image
-and run in CMD/ENTRYPOINT. 
+{% endhighlight %}
+
+Also, You can set your properties. Those properties must call with -D prefix.
 
 #### For Spring Application
 
@@ -132,7 +133,7 @@ import javax.servlet.ServletContextListener;
   public void contextDestroyed(ServletContextEvent sce) {
   }
 }
-  {% endhighlight %}
+{% endhighlight %}
 
 After that register this listener in web.xml:
 {% highlight xml %}
@@ -158,9 +159,9 @@ in security-context.xml add:
 {% endhighlight %}
 
 
-### If Oracle database are used
+### If you are using Oracle database
 
-For web application you should add this driver in dockerfile to
+For the web application, you should add this driver in dockerfile to
 
 {% highlight docker %}
     ADD path-to-repo/ojdbc8.jar /usr/local/tomcat/lib
@@ -206,10 +207,10 @@ java.util.logging.SimpleFormatter.format={"level":"%4$s","message": "%5$s%6$s"}%
 java.util.logging.ConsoleHandler.encoding = UTF-8
 {% endhighlight %}
 
-You can do it in Dokerfile by replacing original logging.properties with COPY/ADD or 
+You can do it in Dokerfile by replacing original logging.properties with COPY/ADD or
 you can use script like in example below:
 {% highlight docker %}
     RUN rm /usr/local/tomcat/conf/logging.properties && echo -e ${log-config} >> /usr/local/tomcat/conf/logging.properties
 {% endhighlight %}
- 
-If ${log-config} are multiline use /n at the end of each line. 
+
+If ${log-config} are multiline use /n at the end of each line.
