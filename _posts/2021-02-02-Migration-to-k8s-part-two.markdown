@@ -161,7 +161,7 @@ in security-context.xml add:
 
 ### If you are using Oracle database
 
-For the web application, you should add this driver in dockerfile to
+For the web application, you should add this driver in the Dockerfile
 
 {% highlight docker %}
     ADD path-to-repo/ojdbc8.jar /usr/local/tomcat/lib
@@ -207,12 +207,12 @@ java.util.logging.SimpleFormatter.format={"level":"%4$s","message": "%5$s%6$s"}%
 java.util.logging.ConsoleHandler.encoding = UTF-8
 {% endhighlight %}
 
-You can do it in Dokerfile by replacing original logging.properties with COPY/ADD or
-you can use script like in example below:
+You can do it in Dockerfile by replacing original logging.properties with the COPY/ADD commands,
+or you can use script like in example below:
 {% highlight docker %}
     ARG log-config
     RUN rm /usr/local/tomcat/conf/logging.properties && echo -e $log-config >> /usr/local/tomcat/conf/logging.properties
 {% endhighlight %}
 Don't forget to set the docker build-args!
 
-If ${log-config} are multiline use /n at the end of each line.
+If ${log-config} are multiline, use /n at the end of each line.
