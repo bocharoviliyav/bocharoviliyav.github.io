@@ -2,7 +2,7 @@
 layout: post
 title:  "Migration Java application to Kubernetes"
 date:   2021-02-02 00:13:00 +0400
-categories: java
+categories: Java
 ---
 In this article, I want to introduce a checklist that can be followed when you
 migrate java application to k8s.
