@@ -189,8 +189,8 @@ spring:
     active: stage
 
 # Graceful shutdown. Waiting period for active requests completion
-lifecycle:
-  timeout-per-shutdown-phase: 20s
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
 # ==========================
 # FOR ALL PROFILES (DEFAULT)
 # ==========================
@@ -340,3 +340,48 @@ Use CheckStyle, Sonarqube.
 
 For IDEA CheckStyle plugin exists. 
 In the toolbar on the CheckStyle, tab chooses Rules: Sun Checks and start project validation.
+
+# Horizontal Pod Autoscaler (HPA)
+
+If you have an inconsistent workload, use [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/). 
+{% highlight xml %}
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v2beta2
+metadata:
+  name: hpa
+spec:
+  minReplicas: 2
+  maxReplicas: 4
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: hpa
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 10
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 15
+    scaleDown:
+      stabilizationWindowSeconds: 120
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 90
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 85
+{% endhighlight %}
+
+

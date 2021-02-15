@@ -155,7 +155,7 @@ After that register this listener in web.xml:
 If Spring Security was used, disable security validation to this endpoint,
 in security-context.xml add:
 {% highlight xml %}
-    <http pattern="/metrics/prom" security="none"/>
+<http pattern="/metrics/prom" security="none"/>
 {% endhighlight %}
 
 
@@ -164,7 +164,7 @@ in security-context.xml add:
 For the web application, you should add this driver in the Dockerfile
 
 {% highlight docker %}
-    ADD path-to-repo/ojdbc8.jar /usr/local/tomcat/lib
+ADD path-to-repo/ojdbc8.jar /usr/local/tomcat/lib
 {% endhighlight %}
 
 and in the maven define driver as provided:
@@ -177,7 +177,6 @@ and in the maven define driver as provided:
 {% endhighlight %}
 
 ### Log definition
-
 
 For Tomcat based application log4j.xml can print JSON too.
 {% highlight xml %}
@@ -210,8 +209,8 @@ java.util.logging.ConsoleHandler.encoding = UTF-8
 You can do it in Dockerfile by replacing original logging.properties with the COPY/ADD commands,
 or you can use script like in example below:
 {% highlight docker %}
-    ARG log-config
-    RUN rm /usr/local/tomcat/conf/logging.properties && echo -e $log-config >> /usr/local/tomcat/conf/logging.properties
+ARG log-config
+RUN rm /usr/local/tomcat/conf/logging.properties && echo -e $log-config >> /usr/local/tomcat/conf/logging.properties
 {% endhighlight %}
 Don't forget to set the docker build-args!
 

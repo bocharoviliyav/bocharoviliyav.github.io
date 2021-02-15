@@ -42,9 +42,7 @@ Enable Lua in nginx.conf:
 load_module modules/ndk_http_module.so;
 load_module modules/ngx_http_lua_module.so;
 {% endhighlight %}
-In additional we need two external modules:
-
-    http, json.
+In additional we need two external modules: http, json.
 
 You can keep it locally and copy in the docker container or install it with LuaRocks.
 
@@ -69,9 +67,9 @@ All requests sent on {servername}/in would be processed by a script called with 
 
 We need to create the file with a name that we are defined above. 
 In convertor.lua defines the anonymous function:
-
-    return function()
-
+{% highlight lua %}
+return function()
+{% endhighlight %}
 After that get our custom cache and assign to the local variable.
 {% highlight lua %}
 local customCache = ngx.shared.custom_cache
