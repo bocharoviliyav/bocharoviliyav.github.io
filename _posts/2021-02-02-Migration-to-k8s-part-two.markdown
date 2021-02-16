@@ -214,4 +214,4 @@ RUN rm /usr/local/tomcat/conf/logging.properties && echo -e $log-config >> /usr/
 {% endhighlight %}
 Don't forget to set the docker build-args!
 
-If ${log-config} are multiline, use /n at the end of each line.
+If $log-config are multiline, use /n at the end of each line.
