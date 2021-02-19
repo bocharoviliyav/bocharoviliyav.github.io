@@ -102,16 +102,16 @@ management:
   endpoint:
     prometheus:
       enabled: true
-  metrics:
-    enabled: true 
-endpoints:
-  web:
-    exposure:
-      include: metrics, prometheus
-    base-path: "/"
-      path-mapping:
-        metrics: /metrics/spring
-        prometheus: /metrics/prom
+    metrics:
+      enabled: true 
+  endpoints:
+    web:
+      exposure:
+        include: metrics, prometheus
+      base-path: "/"
+        path-mapping:
+          metrics: /metrics/spring
+          prometheus: /metrics/prom
 
 {% endhighlight %}
 
@@ -300,6 +300,21 @@ You can print log in JSON format also.
 }
 {% endhighlight %}
 
+For getting information from the BuildProperties you need to define the build-info goal
+in pom.xml:
+{% highlight xml %}
+<plugin>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-maven-plugin</artifactId>
+    <executions>
+        <execution>
+            <goals>
+                <goal>build-info</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+{% endhighlight %}
 
 If you use @EnableWebMvc in your application, add ResourceHandlers:
 {% highlight java %}
