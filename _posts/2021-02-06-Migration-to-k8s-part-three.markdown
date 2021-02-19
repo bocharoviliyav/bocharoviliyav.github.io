@@ -19,43 +19,43 @@ Let's see how we can change the default settings of JVM.
 
 We can start our application with additional JVM params:
 
--Xms parameter sets the initial heap size.
+**-Xms** parameter sets the initial heap size.
 
--Xmx set the maximum heap size.
+**-Xmx** set the maximum heap size.
 
--Xss defines thread stack size.
+**-Xss** defines thread stack size.
 
--XX:ReservedCodeCacheSize set maximum code cache size. Used for JIT compiler.
+**-XX:ReservedCodeCacheSize** set maximum code cache size. Used for JIT compiler.
 
--XX:CodeCacheMinimumFreeSpace parameter set minimum code cache size.
+**-XX:CodeCacheMinimumFreeSpace** parameter set minimum code cache size.
 
--XX:CodeCacheExpansionSize set increase size.
+**-XX:CodeCacheExpansionSize** set increase size.
 
--XX:+UseG1GC enable G1 GC instead of the default.
+**-XX:+UseG1GC** enable G1 GC instead of the default.
 
--XX:MaxGCPauseMillis set the target for the maximum GC pause time. JVM can exceed this target.
+**-XX:MaxGCPauseMillis** set the target for the maximum GC pause time. JVM can exceed this target.
 
--XX:ParallelGCThreads set the number of threads used for stop-the-world phases.
+**-XX:ParallelGCThreads** set the number of threads used for stop-the-world phases.
 
--XX:ConcGCThreads set the number of threads used for concurrent phases.
+**-XX:ConcGCThreads** set the number of threads used for concurrent phases.
 
--XX:InitiatingHeapOccupancyPercent set percentage of the heap occupancy to start a concurrent GC cycle.
+**-XX:InitiatingHeapOccupancyPercent** set percentage of the heap occupancy to start a concurrent GC cycle.
 
--XX:MetaspaceSize the value when a Full GC starts.
+**-XX:MetaspaceSize** the value when a Full GC starts.
 
--XX:MaxMetaspaceSize maximum metaspace size.
+**-XX:MaxMetaspaceSize** maximum metaspace size.
 
--XX:MinMetaspaceExpansion the minimum growth size for a Metaspace.
+**-XX:MinMetaspaceExpansion** the minimum growth size for a Metaspace.
 
--XX:MaxMetaspaceExpansion the maximum growth size for a Metaspace.
+**-XX:MaxMetaspaceExpansion** the maximum growth size for a Metaspace.
 
--XX:+PerfDisableSharedMem  disable writing hsperfdata in persistence storage.
+**-XX:+PerfDisableSharedMem** disable writing hsperfdata in persistence storage.
 
--XX:MaxDirectMemorySize limit on the amount of memory reservation for all Direct Byte Buffers.
+**-XX:MaxDirectMemorySize** limit on the amount of memory reservation for all Direct Byte Buffers.
 
--XX:+AlwaysActAsServerClassMachine parameter that disables Serial GC usage in cases of the small heap size.
+**-XX:+AlwaysActAsServerClassMachine** parameter that disables Serial GC usage in cases of the small heap size.
 
-Pay attention that some of that arguments are deprecated/removed in Java 9+!
+*Pay attention that some of that arguments are deprecated/removed in Java 9+!*
 
 
 Let's run our application with the default JVM settings and load it with the simple workload.
@@ -87,7 +87,7 @@ Check results and Grafana metrics for JVM and k8s.
 
 <img src="/assets/images/jvm_perf/jMeterResult.png"/>
 
-The main thing here is the throughput = 42.9.
+The main thing here is the throughput = 42.9/minute.
 
 <img src="/assets/images/jvm_perf/JVMMem.png"/>
 
@@ -99,7 +99,8 @@ You can reduce Compressed Class Space down to 32m and slightly increase Metaspac
 
 <img src="/assets/images/jvm_perf/K8sMem.png"/>
 
-K8s container consumes around 500m, but while the workload increase consumes almost 900m!
+K8s container consumes around 500m, but while the workload increase consumes almost **900m**!
+
 
 We can try to reduce general parameters, apply new settings, and rerun the test plan.
 
@@ -125,7 +126,9 @@ In Non-Heap, we can reduce Compressed Class Space down to 16m and Code Cache dow
 
 <img src="/assets/images/jvm_perf/K8sMem2.png"/>
 
-Throughput increases up to 43.6 with this memory limit reduction.
+There is no peak memory consumption.
+
+Throughput increases up to 43.6/minute with this memory limit reduction.
 
 <img src="/assets/images/jvm_perf/jMeterResult2.png"/>
 
@@ -140,7 +143,7 @@ But JVM heap + non-heap size 284m.
 
 <img src="/assets/images/jvm_perf/K8sMemJVM.png"/>
 
-That can be the reason for exceeding the container memory limits, and OOM happens.
+That can be the reason for exceeding the container memory limits, and the reason of OOM.
 
 For diving deeper into JVM memory usage, we can use Native Memory Tracking(NMT).
 [One of the best topics about NMT](https://shipilev.net/jvm/anatomy-quarks/12-native-memory-tracking/).
@@ -256,6 +259,5 @@ Total: reserved=355478KB, committed=238634KB
 Java Heap reserved and committed size decreases by -Xms and -Xmx.
 Class size depends on Metaspace. Thread size decreases by stack size -Xss. GC size can be changed by CG changing itself.
 
-Use NMT and JVM params for reducing memory consumption and increasing application performance :)
-
-Do not forget to remove NMT for the production.
+Use NMT and JVM params for reducing memory consumption and increasing application performance. 
+Set k8s request and limits by the NMT results, and do not forget to remove NMT for the production.
