@@ -135,7 +135,7 @@ import javax.servlet.ServletContextListener;
 }
 {% endhighlight %}
 
-After that register this listener in web.xml:
+After that, register this listener in web.xml:
 {% highlight xml %}
 <servlet>
     <servlet-name>prometheus</servlet-name>

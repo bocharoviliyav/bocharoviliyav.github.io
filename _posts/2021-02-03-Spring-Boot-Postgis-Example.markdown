@@ -77,7 +77,7 @@ For the Liquibase usage, you need to define changelog and SQL script itself.
 </databaseChangeLog>
 {% endhighlight %}
 
-In a root tag, you need to define the changeset. That changeset must have a unique id and path to the SQL file (relative or absolute). 
+In a root tag, you need to define the changeset. It must have a unique id and the path to the SQL file (relative or absolute). 
 
 The SQL file can contain DDL and DML queries.
 
@@ -90,11 +90,11 @@ from unnest(ARRAY['test0',
 on conflict do nothing;
 {% endhighlight %}
 
-The result of this SQL execution will be inserted as many records you define in the array.
+The result of this SQL script execution will be inserted as many records as many elements you define in the array.
 
-In this script, 'geog' is a geography PostGIS type. The minimal configuration for geography is longitude, latitude, and SRID (Spatial Reference System Identifier). 
-Latitude and longitude we should set to the point by calling ST_Point(double, double) function.
-Then need to set SRID via ST_SetSRID and cast to the geography type with '::' or cast operator.
+In this script, 'geog' is a column with the geography PostGIS type. The minimal configuration for geography is longitude, latitude, and SRID (Spatial Reference System Identifier).
+Latitude and longitude are set for the point by calling ST_Point(double, double) function.
+Then, set SRID via ST_SetSRID and cast to the geography type with '::' or cast operator.
 
 The next step is setting application properties.
 
@@ -115,8 +115,8 @@ spring.liquibase.enabled=false
 spring.liquibase.change-log=classpath*:dbchangelog.xml
 {% endhighlight %}
 
-This project use OpenApi v3, so we can use springdoc-openapi for Swagger UI.
-All that you need is to add the dependency in pom.xml.
+Documentation for this project based on OpenApi v3, so we can use springdoc-openapi for Swagger UI.
+You need to add the dependency in pom.xml.
 
 {% highlight xml %}
 <dependency>
@@ -133,7 +133,7 @@ For proper Jackson JSON conversion, you should add JtsModule Bean in the configu
 public class JacksonConfig {
   @Bean
   public JtsModule jtsModule() {
-  return new JtsModule();
+    return new JtsModule();
   }
 }
 {% endhighlight %}
@@ -155,7 +155,7 @@ public class Test implements Serializable {
 {% endhighlight %}
 
 
-Geography is a binary PostGIS type defined by longitude,  latitude, SRID. Or can convert from EWKT( Extended Well-Known Text/Binary). EWKT example: SRID=4326;POINT(37.617635 55.755814).
+Geography is a binary PostGIS type defined by longitude, latitude, SRID. Other way is conversion from EWKT( Extended Well-Known Text/Binary). EWKT example: SRID=4326;POINT(37.617635 55.755814).
 
 PostGIS provides a lot of useful functions for GIS operations.
 You can create PostGIS objects in Java.
@@ -168,15 +168,15 @@ point.setSRID(4326);
 
 {% endhighlight %}
 
-Then use this object in the native query.
-In this example query result is three nearest objects to the provided point.
+Then, use this object in the native query.
+In this example, query result is three nearest objects to the provided point.
 
 {% highlight java %}
 @Query(value = "SELECT * FROM public.test ORDER BY ST_Distance(geog,  :geom ) LIMIT 3", nativeQuery = true)
 List<Test> findNearest(final Point geom);
 {% endhighlight %}
 
-Or you can create a fully native query.
+In alternative, you can create a fully native query.
 
 {% highlight java %}
 @Transactional
@@ -186,9 +186,9 @@ void createOrUpdate(final String name, final Double lat, final Double lon);
 {% endhighlight %}
 
 Let's deploy this application to the k8s cluster.
-All that we need for PostgreSQL + PostGIS extension in the k8s is configuration yaml.
+All that we need for installation of PostgreSQL + PostGIS extension in the k8s is configuration yaml.
 
-For PostgreSQL + PostGIS deployment, let's create k8s config. This config contains the ConfigMap with
+For the PostgreSQL + PostGIS deployment, let's create k8s config. This config contains the ConfigMap with
 credentials, PersistentVolume and PersistentVolumeClaim, Deployment and Service.
 You should save it to the k8s folder as postgres.yml.
 
@@ -281,8 +281,7 @@ spec:
    app: postgres
 {% endhighlight %}
      
-Then create a config for the application.
-All that we need is Deployment and Service.
+Then, create a config for the application to define Deployment and Service.
 
 {% highlight yaml %}
 apiVersion: apps/v1
@@ -322,13 +321,13 @@ spec:
     app: postgis-example
 {% endhighlight %}
 
-With the local docker-machine, you should pay attention to this property.
+With the local docker-machine, you should pay attention to imagePullPolicy property.
 
 {% highlight yaml %}
 imagePullPolicy: Never
 {% endhighlight %}
 
-After all that preparations, build the application (mvn clean install) and 
+After all these preparations, build the application (by 'mvn clean install' command) and 
 follow these steps.
 
 Go to the root of the application via cd.
@@ -345,24 +344,24 @@ Build a local docker image for the application with tag name example/postgis:2.
 docker build -t example/postgis:2 .
 {% endhighlight %}
 
-Install PostgreSQL and PostGIS in the k8s cluster.
+Deploy PostgreSQL and PostGIS in the k8s cluster.
 
 {% highlight console %}
 kubectl apply -f .\k8s\postgres.yml
 {% endhighlight %}
 
-Install the application.
+Deploy the application.
 
 {% highlight console %}
 kubectl apply -f .\k8s\deployment.yaml
 {% endhighlight %}
 
-Then forward port for the local access.
+Then, forward the port for the local access.
 
 {% highlight console %}
 kubectl port-forward service/postgis-example 8081:8080
 {% endhighlight %}
 
-After that, you can open OpenApi UI by [this link](http://127.0.0.1:8081/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/)
+After this, you can open OpenApi UI by [this link](http://127.0.0.1:8081/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config#/)
 
-That application source code available on [Github](https://github.com/bocharoviliyav/postgis-example).
+The source code of the application is available on [Github](https://github.com/bocharoviliyav/postgis-example).

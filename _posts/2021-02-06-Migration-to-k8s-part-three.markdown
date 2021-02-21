@@ -4,16 +4,16 @@ title:  "Migration Java application to Kubernetes. JVM optimisation"
 date:   2021-02-06 00:03:00 +0400
 categories: Java
 ---
-That is the third part of the k8s migration articles. Here are few things about JVM performance monitoring and optimization.
-In k8s, Java applications usually run without any JVM configurations or with just like this one:
+This is the third part of the k8s migration articles. There are some things about JVM performance monitoring and optimization here.
+In the k8s, Java applications usually run without any JVM configurations or with just like this one:
 
 {% highlight console %}
 java -jar -Xms=req -Xmx=lim Application.jar
 {% endhighlight %}
 
-In this case, JVM 10 can use a Serial GC if a machine has less than two available CPUs and two GB of RAM;
-set a large amount of memory reservation for the code cache;
-use a bigger thread stack size than necessary, etc.
+In this case, JVM 10: uses a Serial GC if a machine has less than two available CPUs and two GB of RAM;
+sets a large amount of memory reservation for the code cache;
+uses a bigger thread stack size than necessary, etc.
 
 Let's see how we can change the default settings of JVM.
 
@@ -21,29 +21,29 @@ We can start our application with additional JVM params:
 
 **-Xms** parameter sets the initial heap size.
 
-**-Xmx** set the maximum heap size.
+**-Xmx** sets the maximum heap size.
 
 **-Xss** defines thread stack size.
 
-**-XX:ReservedCodeCacheSize** set maximum code cache size. Used for JIT compiler.
+**-XX:ReservedCodeCacheSize** sets maximum code cache size. Used for JIT compiler.
 
-**-XX:CodeCacheMinimumFreeSpace** parameter set minimum code cache size.
+**-XX:CodeCacheMinimumFreeSpace** parameter sets minimum code cache size.
 
-**-XX:CodeCacheExpansionSize** set increase size.
+**-XX:CodeCacheExpansionSize** sets code cache expansion size.
 
-**-XX:+UseG1GC** enable G1 GC instead of the default.
+**-XX:+UseG1GC** enables G1 GC instead of the default.
 
-**-XX:MaxGCPauseMillis** set the target for the maximum GC pause time. JVM can exceed this target.
+**-XX:MaxGCPauseMillis** sets the target for the maximum GC pause time. JVM can exceed this target.
 
-**-XX:ParallelGCThreads** set the number of threads used for stop-the-world phases.
+**-XX:ParallelGCThreads** sets the number of threads used for stop-the-world phases.
 
-**-XX:ConcGCThreads** set the number of threads used for concurrent phases.
+**-XX:ConcGCThreads** sets the number of threads used for concurrent phases.
 
-**-XX:InitiatingHeapOccupancyPercent** set percentage of the heap occupancy to start a concurrent GC cycle.
+**-XX:InitiatingHeapOccupancyPercent** sets percentage of the heap occupancy to start a concurrent GC cycle.
 
-**-XX:MetaspaceSize** the value when a Full GC starts.
+**-XX:MetaspaceSize** when the space committed for class metadata reaches this value, a Full GC starts.
 
-**-XX:MaxMetaspaceSize** maximum metaspace size.
+**-XX:MaxMetaspaceSize** defines maximum metaspace size.
 
 **-XX:MinMetaspaceExpansion** the minimum growth size for a Metaspace.
 
@@ -51,34 +51,34 @@ We can start our application with additional JVM params:
 
 **-XX:+PerfDisableSharedMem** disable writing hsperfdata in persistence storage.
 
-**-XX:MaxDirectMemorySize** limit on the amount of memory reservation for all Direct Byte Buffers.
+**-XX:MaxDirectMemorySize** the limit on the amount of memory reservation for all Direct Byte Buffers.
 
-**-XX:+AlwaysActAsServerClassMachine** parameter that disables Serial GC usage in cases of the small heap size.
+**-XX:+AlwaysActAsServerClassMachine** the parameter that disables Serial GC usage in cases of the small heap size.
 
-*Pay attention that some of that arguments are deprecated/removed in Java 9+!*
+*Pay attention that some of these arguments are deprecated/removed in Java 9+!*
 
 
 Let's run our application with the default JVM settings and load it with the simple workload.
 We can create a Postman collection or manually send requests to the application. 
-But jMeter is a wide-spreading solution for load testing.
+However, jMeter is a wide-spreading solution for the load testing.
 
 Run jMeter and create tread group in our workload:
 
 <img src="/assets/images/jvm_perf/jMeterTG.png"/>
 
-Set 10 parallel threads with infinity loop of workload and 10 minutes timeout. 
+Set 10 parallel threads with the infinity loop of workload and 10 minutes timeout. 
 
 <img src="/assets/images/jvm_perf/jMeterTGsettings.png"/>
 
-Then create a new HTTP request.
+Then, create a new HTTP request.
 
 <img src="/assets/images/jvm_perf/jMeterHttp.png"/>
 
-Provide the protocol, the host, the port, the path, choose the type of the request.
+Provide the protocol, the host, the port, the path, and choose the type of the request.
 
 <img src="/assets/images/jvm_perf/jMeterHttpSettings.png"/>
 
-Create Graph Results to visualize our workload.
+For the result visualisation of our workload, create Graph Results.
 
 <img src="/assets/images/jvm_perf/jMeterGR.png"/>
 
@@ -91,7 +91,7 @@ The main thing here is the throughput = 42.9/minute.
 
 <img src="/assets/images/jvm_perf/JVMMem.png"/>
 
-We can see that the application reserve 15 times more heap than consume.
+We can see that the application reserves 15 times more heap than consume.
 
 <img src="/assets/images/jvm_perf/JVMMemNonHeap.png"/>
 
@@ -99,7 +99,7 @@ You can reduce Compressed Class Space down to 32m and slightly increase Metaspac
 
 <img src="/assets/images/jvm_perf/K8sMem.png"/>
 
-K8s container consumes around 500m, but while the workload increase consumes almost **900m**!
+K8s container consumes around 500m, but while the workload increase, it consumes almost **900m**!
 
 
 We can try to reduce general parameters, apply new settings, and rerun the test plan.
@@ -135,15 +135,15 @@ Throughput increases up to 43.6/minute with this memory limit reduction.
 
 Unfortunately, when you try to track resource usage in Grafana or analogs, you'll see that JVM consumes more RAM than you set via JVM params.
 
-Container memory consumption 473m.
+Container memory consumption is 473m.
 
 <img src="/assets/images/jvm_perf/K8sMemContainer.png"/>
 
-But JVM heap + non-heap size 284m.
+But JVM heap + non-heap size is 284m.
 
 <img src="/assets/images/jvm_perf/K8sMemJVM.png"/>
 
-That can be the reason for exceeding the container memory limits, and the reason of OOM.
+This can be the reason of exceeding the container memory limits, and, as a consequence, cause the OOM.
 
 For diving deeper into JVM memory usage, we can use Native Memory Tracking(NMT).
 [One of the best topics about NMT](https://shipilev.net/jvm/anatomy-quarks/12-native-memory-tracking/).
@@ -157,7 +157,7 @@ In few words, we should run our application with these params:
 {% endhighlight %}
 
 PrintNMTStatistics flag means that NMT statistics will be printed in stdout by SIGTERM signal.
-Or you can connect in your pod console and run:
+Other way, you can connect in your pod console and run:
 
 {% highlight console %}
 pidof java
@@ -260,4 +260,4 @@ Java Heap reserved and committed size decreases by -Xms and -Xmx.
 Class size depends on Metaspace. Thread size decreases by stack size -Xss. GC size can be changed by CG changing itself.
 
 Use NMT and JVM params for reducing memory consumption and increasing application performance. 
-Set k8s request and limits by the NMT results, and do not forget to remove NMT for the production.
+Set k8s request and limits based on the NMT results, and do not forget to remove NMT for the production.

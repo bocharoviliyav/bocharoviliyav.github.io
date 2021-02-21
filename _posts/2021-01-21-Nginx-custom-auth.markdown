@@ -48,7 +48,7 @@ You can keep it locally and copy in the docker container or install it with LuaR
 
 If we are intercept requests and send authorization in KeyCloak, we'll
 have token regeneration for each one. It would be ok in some cases, but let's reduce KeyCloak compute resource usage and create cache storage in our proxy.
-In the http section of nginx.conf initialize the global variable. That variable will contain key-value pairs.
+In the http section of nginx.conf initialize the global variable. This variable will contain key-value pairs.
 Where key - unique identifier of client and value is current access token.
 {% highlight lua %}
 lua_shared_dict custom_cache 10m;
@@ -70,7 +70,7 @@ In convertor.lua defines the anonymous function:
 {% highlight lua %}
 return function()
 {% endhighlight %}
-After that get our custom cache and assign to the local variable.
+After that, get our custom cache and assign to the local variable.
 {% highlight lua %}
 local customCache = ngx.shared.custom_cache
 {% endhighlight %}
