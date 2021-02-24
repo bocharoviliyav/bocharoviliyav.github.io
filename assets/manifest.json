@@ -31,6 +31,10 @@
     {
       "src": "/assets/images/touch/homescreen192.png",
       "sizes": "192x192"
+    },
+    {
+      "src": "/assets/images/touch/homescreen512.png",
+      "sizes": "512x512"
     }
   ],
   "background_color": "#202025"
