@@ -2,6 +2,7 @@
 layout: page
 title: Author
 permalink: /about/
+description: Java,Typescript,Rust,Angular,k8s,Kubernetes,Docker,Grafana
 ---
 <img src="/assets/images/about/img.png"  width="204" height="358"/>
 

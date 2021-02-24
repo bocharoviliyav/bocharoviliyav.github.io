@@ -21,5 +21,6 @@ pwa:
 
 plugins:
   - jekyll-pwa-plugin
+  - jekyll-sitemap
 
 
