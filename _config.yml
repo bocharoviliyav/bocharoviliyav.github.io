@@ -4,7 +4,7 @@ email: bocharoviliav@gmail.com
 description: >-
   Java, Typescript, Rust and DevOps stuff will be here.
 baseurl: ""
-url: "https://bocharoviliyav.github.io"
+url: "https://bocharoviliyav.blog"
 twitter_username: bocharoviliyav
 github_username:  bocharoviliyav
 linkedin_username: bocharoviliyav
@@ -14,4 +14,12 @@ google_analytics: G-PE6HGY6KFF
 # Build settings
 markdown: kramdown
 theme: minima
+
+pwa:
+  enabled: true
+  precache_recent_posts_num: 10
+
+plugins:
+  - jekyll-pwa-plugin
+
 

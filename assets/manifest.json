@@ -1,0 +1,37 @@
+{
+  "name": "Yet Another Fullstack Developer Blog",
+  "short_name": "YAFDB",
+  "description": "Java, Typescript, Rust and DevOps stuff will be here.",
+  "lang": "en-EN",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "theme_color": "#9f54fb",
+  "icons": [
+    {
+      "src": "/assets/images/touch/homescreen48.png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "/assets/images/touch/homescreen72.png",
+      "sizes": "72x72"
+    },
+    {
+      "src": "/assets/images/touch/homescreen96.png",
+      "sizes": "96x96"
+    },
+    {
+      "src": "/assets/images/touch/homescreen144.png",
+      "sizes": "144x144"
+    },
+    {
+      "src": "/assets/images/touch/homescreen168.png",
+      "sizes": "168x168"
+    },
+    {
+      "src": "/assets/images/touch/homescreen192.png",
+      "sizes": "192x192"
+    }
+  ],
+  "background_color": "#202025"
+}
