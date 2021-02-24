@@ -1,8 +1,53 @@
 <div class="social-media-list">
-
-    {%- if site.telegram_username -%}<a href="https://t.me/{{ site.telegram_username | cgi_escape | escape }}"><svg class="svg-icon"><use xlink:href="{{ '/assets/minima-social-icons.svg#telegram' | relative_url }}"></use></svg></a> &nbsp; {%- endif -%}
-    {%- if site.github_username -%}<a href="https://github.com/{{ site.github_username| cgi_escape | escape }}"><svg class="svg-icon"><use xlink:href="{{ '/assets/minima-social-icons.svg#github' | relative_url }}"></use></svg> </a> &nbsp; {%- endif -%}
-    {%- if site.linkedin_username -%}<a href="https://www.linkedin.com/in/{{ site.linkedin_username| cgi_escape | escape }}"><svg class="svg-icon"><use xlink:href="{{ '/assets/minima-social-icons.svg#linkedin' | relative_url }}"></use></svg> </a> &nbsp; {%- endif -%}
-    {%- if site.twitter_username -%}<a href="https://www.twitter.com/{{ site.twitter_username| cgi_escape | escape }}"><svg class="svg-icon"><use xlink:href="{{ '/assets/minima-social-icons.svg#twitter' | relative_url }}"></use></svg></a>{%- endif -%}
+    {%- if site.telegram_username -%}
+    <div class="d-flex">
+        <a href="https://t.me/{{ site.telegram_username | cgi_escape | escape }}">
+            <svg class="svg-icon">
+                <use xlink:href="{{ '/assets/minima-social-icons.svg#telegram' | relative_url }}"></use>
+            </svg>
+        </a>
+        <p class="social-media-list-p-name">
+            Telegram
+        </p>
+    </div>
+    {%- endif -%}
+    {%- if site.github_username -%}
+    <div class="d-flex">
+        <a href="https://github.com/{{ site.github_username| cgi_escape | escape }}">
+            <svg class="svg-icon">
+                <use xlink:href="{{ '/assets/minima-social-icons.svg#github' | relative_url }}"></use>
+            </svg>
+        </a>
+        <p class="social-media-list-p-name">
+            Github
+        </p>
+    </div>
+    {%- endif -%}
+    {%- if site.linkedin_username -%}
+    <div class="d-flex">
+        <a
+                href="https://www.linkedin.com/in/{{ site.linkedin_username| cgi_escape | escape }}">
+            <svg class="svg-icon">
+                <use xlink:href="{{ '/assets/minima-social-icons.svg#linkedin' | relative_url }}"></use>
+            </svg>
+        </a>
+        <p class="social-media-list-p-name">
+            Linkedin
+        </p>
+    </div>
+    {%- endif -%}
+    {%- if site.twitter_username -%}
+    <div class="d-flex">
+        <a
+                href="https://www.twitter.com/{{ site.twitter_username| cgi_escape | escape }}">
+            <svg class="svg-icon">
+                <use xlink:href="{{ '/assets/minima-social-icons.svg#twitter' | relative_url }}"></use>
+            </svg>
+        </a>
+        <p class="social-media-list-p-name">
+            Twitter
+        </p>
+    </div>
+    {%- endif -%}
 
 </div>

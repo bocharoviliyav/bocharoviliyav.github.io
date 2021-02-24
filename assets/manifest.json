@@ -3,7 +3,7 @@
   "short_name": "YAFDB",
   "description": "Java, Typescript, Rust and DevOps stuff will be here.",
   "lang": "en-EN",
-  "start_url": "./?utm_source=pwa",
+  "start_url": "/",
   "display": "standalone",
   "orientation": "any",
   "theme_color": "#c595ff",

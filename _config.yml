@@ -15,15 +15,7 @@ google_analytics: G-PE6HGY6KFF
 markdown: kramdown
 theme: minima
 
-pwa:
-  precache_recent_posts_num: 10
-  sw_src_filepath: sw.js
-  sw_dest_filename: sw.js
-  precache_glob_ignores:
-    - "/assets/manifest.json"
-
 plugins:
-  - jekyll-pwa-plugin
   - jekyll-sitemap
 
 
