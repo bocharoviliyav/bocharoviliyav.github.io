@@ -3,7 +3,7 @@ author: Ilia Bocharov
 email: bocharoviliav@gmail.com
 description: >-
   Java, Typescript, Rust and DevOps stuff will be here.
-baseurl: ""
+baseurl: "/"
 url: "https://bocharoviliyav.blog"
 twitter_username: bocharoviliyav
 github_username:  bocharoviliyav
@@ -16,8 +16,11 @@ markdown: kramdown
 theme: minima
 
 pwa:
-  enabled: true
   precache_recent_posts_num: 10
+  sw_src_filepath: sw.js
+  sw_dest_filename: sw.js
+  precache_glob_ignores:
+    - "/assets/manifest.json"
 
 plugins:
   - jekyll-pwa-plugin

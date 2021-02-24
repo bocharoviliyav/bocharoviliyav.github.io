@@ -5,14 +5,20 @@ workbox.core.setCacheNameDetails({
     runtime: 'runtime-cache'
 });
 
+workbox.googleAnalytics.initialize();
+
 workbox.core.skipWaiting();
 workbox.core.clientsClaim();
 
+workbo.google
+
 workbox.precaching.precacheAndRoute(self.__precacheManifest);
+
+workbox.routing.setDefaultHandler(workbox.strategies.networkFirst());
 
 workbox.routing.registerRoute(
     /\.html$/,
-    new workbox.strategies.NetworkFirst()
+    new workbox.strategies.StaleWhileRevalidate()
 );
 
 workbox.routing.registerRoute(
@@ -20,9 +26,12 @@ workbox.routing.registerRoute(
     new workbox.strategies.NetworkFirst()
 );
 
-
 workbox.routing.registerRoute(
     /assets\/(img|icons)/,
     new workbox.strategies.CacheFirst()
 );
 
+workbox.routing.registerRoute(
+    /^https?:\/\/fonts\.googleapis\.com/,
+    workbox.strategies.staleWhileRevalidate()
+);
