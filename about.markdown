@@ -2,9 +2,9 @@
 layout: page
 title: Author
 permalink: /about/
-description: Java,Typescript,Rust,Angular,k8s,Kubernetes,Docker,Grafana
+description: Bocharov Ilia - Fullstack Developer | Java, Typescript, Kubernetes, Docker
 ---
-<img src="/assets/images/about/img.png"  width="204" height="358"/>
+<img src="/assets/images/about/img.webp" alt="Bocharov Ilia" width="204" height="358"/>
 
 Hi all! My name is Ilia Bocharov.
 

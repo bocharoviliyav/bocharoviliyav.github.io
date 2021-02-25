@@ -62,7 +62,7 @@ Follow installation notes for getting the admin password and forwarding the port
 You can see/edit the Grafana admin account via the k8s dashboard.
 Open tab secret, choose grafana, and at the bottom, you'll see necessary fields.
 
-<img src="/assets/images/grafana/grafanaSecret.png"/>
+<img alt="Grafana secret" src="/assets/images/grafana/grafanaSecret.webp" width="952" height="891"/>
 
 Then, you should expose grafana service or run port-forwarding.
 
@@ -72,14 +72,21 @@ kubectl port-forward service/grafana 8080:80
 
 After this, you need to define datasource:
 
-<img src="/assets/images/grafana/ds.gif"/>
+<figure>
+  <video width="100%" height="auto" controls loop>
+    <source src="/assets/images/grafana/ds.webm" type="video/webm">
+  </video>
+</figure>
 
 click Add Data Source button, choose Prometheus, define http://prometheus-server:80 as URL, and click Save & Test.
 
 Then you can import any k8s dashboard. With id = 12117, for example.
 
-<img src="/assets/images/grafana/dash.gif"/>
-
+<figure>
+  <video width="100%" height="auto" controls loop>
+    <source src="/assets/images/grafana/dash.webm" type="video/webm">
+  </video>
+</figure>
 You can add your application in Prometheus/Grafana.
 
 Let's connect the application from the previous topic to the Prometheus.
@@ -107,7 +114,7 @@ scrape_configs:
         - postgis-example.default.svc.cluster.local:8080
 {% endhighlight %}
           
-<img src="/assets/images/grafana/PromAddJvm.png"/>
+<img alt="Prometheus JVM source" src="/assets/images/grafana/PromAddJvm.webp" width="1504" height="859"/>
 
 Then, forward the port for prometheus-server and send a POST request to the http://127.0.0.1:9090/-/reload.
 
@@ -121,6 +128,6 @@ Import via Grafana.com -> 4701 -> Load -> select prometheus datasource -> Import
 
 You must see a dashboard like this.
 
-<img src="/assets/images/grafana/PromJvm.png"/>
+<img alt="JVM Dashboard" src="/assets/images/grafana/PromJvm.webp" width="1779" height="901"/>
 
 All this stuff can be used in the following article.

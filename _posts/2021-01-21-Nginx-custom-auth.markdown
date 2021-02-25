@@ -24,15 +24,15 @@ First of all, we need to create a realm in KeyCloak.
 If you need multi-tenancy in your application, you should create separate realms for each tenant.
 You can also create a realm for utility application in your cluster.
 
-<img src="/assets/images/nginx_keycloak/add_realm.png"/>
+<img alt="Keycloak Add Realm" src="/assets/images/nginx_keycloak/add_realm.webp" width="346" height="303"/>
 
 The next step is Client creation. You must set required fields, can grant business roles.
 Don't forget to save the client's secret and id. We'll use them later.
 
-<img src="/assets/images/nginx_keycloak/client_creation.png"/>
+<img alt="Keycloak Create Client" src="/assets/images/nginx_keycloak/client_creation.webp" width="1058" height="841"/>
 
 
-<img src="/assets/images/nginx_keycloak/client_secret.png"/>
+<img alt="Keycloak Client Secret" src="/assets/images/nginx_keycloak/client_secret.webp" width="1018" height="440"/>
 You can get more information about OIDC Clients in the official documentation [chapter 8 Managing Clients](https://www.keycloak.org/docs/latest/server_admin/#_clients).
 
 # Nginx preparation
@@ -188,7 +188,7 @@ And then, you need to define docker host IP instead of localhost in configuratio
 In this case, all services with mybridge can have cross-container communication.
 We can test our proxy. In Postman, set headers (realm, client, secret) and send the request.
 
-<img src="/assets/images/nginx_keycloak/postman.png"/>
+<img alt="Postman" src="/assets/images/nginx_keycloak/postman.webp" width="1235" height="622"/>
 
 All things can be simpler, but you can find your case when you can apply this knowledge.
 

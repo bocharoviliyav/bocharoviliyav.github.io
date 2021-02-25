@@ -64,40 +64,40 @@ However, jMeter is a wide-spreading solution for the load testing.
 
 Run jMeter and create tread group in our workload:
 
-<img src="/assets/images/jvm_perf/jMeterTG.png"/>
+<img alt="jMeter tread group" src="/assets/images/jvm_perf/jMeterTG.webp" width="1507" height="839"/>
 
 Set 10 parallel threads with the infinity loop of workload and 10 minutes timeout. 
 
-<img src="/assets/images/jvm_perf/jMeterTGsettings.png"/>
+<img alt="jMeter tread group settings" src="/assets/images/jvm_perf/jMeterTGSettings.webp" width="727" height="603"/>
 
 Then, create a new HTTP request.
 
-<img src="/assets/images/jvm_perf/jMeterHttp.png"/>
+<img alt="jMeter Http" src="/assets/images/jvm_perf/jMeterHttp.webp" width="1426" height="845"/>
 
 Provide the protocol, the host, the port, the path, and choose the type of the request.
 
-<img src="/assets/images/jvm_perf/jMeterHttpSettings.png"/>
+<img alt="jMeter Http settings" src="/assets/images/jvm_perf/jMeterHttpSettings.webp" width="1500" height="856"/>
 
 For the result visualisation of our workload, create Graph Results.
 
-<img src="/assets/images/jvm_perf/jMeterGR.png"/>
+<img alt="jMeter Graph Result" src="/assets/images/jvm_perf/jMeterGR.webp" width="1443" height="822"/>
 
 Then, run the test plan.
 Check results and Grafana metrics for JVM and k8s.
 
-<img src="/assets/images/jvm_perf/jMeterResult.png"/>
+<img alt="jMeter result" src="/assets/images/jvm_perf/jMeterResult.webp" width="1109" height="811"/>
 
 The main thing here is the throughput = 42.9/minute.
 
-<img src="/assets/images/jvm_perf/JVMMem.png"/>
+<img alt="JVM memory" src="/assets/images/jvm_perf/JVMMem.webp" width="1746" height="761"/>
 
 We can see that the application reserves 15 times more heap than consume.
 
-<img src="/assets/images/jvm_perf/JVMMemNonHeap.png"/>
+<img alt="JVM Non-heap" src="/assets/images/jvm_perf/JVMMemNonHeap.webp" width="1777" height="718"/>
 
 You can reduce Compressed Class Space down to 32m and slightly increase Metaspace.
 
-<img src="/assets/images/jvm_perf/K8sMem.png"/>
+<img alt="k8s memory" src="/assets/images/jvm_perf/K8sMem.webp" width="1770" height="379"/>
 
 K8s container consumes around 500m, but while the workload increase, it consumes almost **900m**!
 
@@ -116,32 +116,32 @@ We can try to reduce general parameters, apply new settings, and rerun the test 
 -XX:+PerfDisableSharedMem
 {% endhighlight %}
 
-<img src="/assets/images/jvm_perf/JVMMem2.png"/>
+<img alt="JVM memory" src="/assets/images/jvm_perf/JVMMem2.webp" width="1328" height="749"/>
 
 With the strictly defined heap size, JVM starts to use all available space.
 
-<img src="/assets/images/jvm_perf/JVMMemNonHeap2.png"/>
+<img alt="JVM Non-Heap" src="/assets/images/jvm_perf/JVMMemNonHeap2.webp" width="1773" height="712"/>
 
 In Non-Heap, we can reduce Compressed Class Space down to 16m and Code Cache down to 32m.
 
-<img src="/assets/images/jvm_perf/K8sMem2.png"/>
+<img alt="k8s memory" src="/assets/images/jvm_perf/K8sMem2.webp" width="1754" height="386"/>
 
 There is no peak memory consumption.
 
 Throughput increases up to 43.6/minute with this memory limit reduction.
 
-<img src="/assets/images/jvm_perf/jMeterResult2.png"/>
+<img alt="jMeter result" src="/assets/images/jvm_perf/jMeterResult2.webp" width="1130" height="795"/>
 
 
 Unfortunately, when you try to track resource usage in Grafana or analogs, you'll see that JVM consumes more RAM than you set via JVM params.
 
 Container memory consumption is 473m.
 
-<img src="/assets/images/jvm_perf/K8sMemContainer.png"/>
+<img alt="Container memory" src="/assets/images/jvm_perf/K8sMemContainer.webp" width="1067" height="365"/>
 
 But JVM heap + non-heap size is 284m.
 
-<img src="/assets/images/jvm_perf/K8sMemJVM.png"/>
+<img alt="JVM in container memory" src="/assets/images/jvm_perf/K8sMemJVM.webp" width="670" height="361"/>
 
 This can be the reason of exceeding the container memory limits, and, as a consequence, cause the OOM.
 
