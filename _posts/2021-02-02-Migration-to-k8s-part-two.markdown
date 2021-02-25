@@ -8,7 +8,7 @@ This article is the thoughts about additional steps that need for monolith insta
 
 There is the same application as Spring Boot, but a few main things need highlighting.
 
-### Dockerfile
+## Dockerfile
 In this example, Dockerfile contains Ubuntu, Tomcat server, and jar/war as application.
 
 {% highlight docker %}
@@ -68,7 +68,7 @@ export CATALINA_OPTS="$CATALINA_OPTS -DCUSTOM_OPTION=${ENV_OPTION}"
 
 Also, You can set your properties. Those properties must call with -D prefix.
 
-#### For Spring Application
+### For Spring Application
 
 In pom.xml add necessary dependencies:
 {% highlight xml %}
@@ -159,7 +159,7 @@ in security-context.xml add:
 {% endhighlight %}
 
 
-### If you are using Oracle database
+## If you are using Oracle database
 
 For the web application, you should add this driver in the Dockerfile
 
@@ -176,7 +176,7 @@ and in the maven define driver as provided:
 </dependency>
 {% endhighlight %}
 
-### Log definition
+## Log definition
 
 For Tomcat based application log4j.xml can print JSON too.
 {% highlight xml %}

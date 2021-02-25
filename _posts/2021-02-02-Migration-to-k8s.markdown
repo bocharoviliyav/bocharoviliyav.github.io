@@ -12,12 +12,12 @@ Let's highlight two main types of application:
 
 Some rules applied to both types, but other rules applied only for the second category.
 
-### Project must contain k8s configuration
+## Project must contain k8s configuration
 
 Typically you can add k8s/deployment.yaml. Examples available in 
 [k8s documentation](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 
-### Project should contain ignore files
+## Project should contain ignore files
 
 .gitignore
 {% highlight ignore %}
@@ -52,7 +52,7 @@ gen
 .git
 {% endhighlight %}
 
-### Dockerfile
+## Dockerfile
 Docker file used to image creation.
 The image usually contains few layers: os, auxiliary soft, JDK, application itself.
 In this example, OS - Ubuntu, JDK installed manually and Spring Boot "fat" jar as application.
@@ -72,7 +72,7 @@ CMD["java", "$JAVA_OPTS","-Djava.security.egd=file:/dev/./urandom", "-jar", "App
 Remember that all tools started in RUN section available only in the
 image creation phase! If you need any daemons, create and run the script.
 
-### Prepare application to Prometheus
+## Prepare application to Prometheus
 In pom.xml, add necessary dependencies:
 {% highlight xml %}
 <dependency>
@@ -118,7 +118,7 @@ management:
 
 Useful Grafana [JVM dashboard](https://grafana.com/grafana/dashboards/4701).
 
-### You can redefine jar/war name for docker
+## You can redefine jar/war name for docker
 In pom.xml, in build tag define the final name:
 {% highlight xml %}
 <build>
@@ -127,7 +127,7 @@ In pom.xml, in build tag define the final name:
 {% endhighlight %}
 
 
-### If you are using Oracle database
+## If you are using Oracle database
 For Spring Boot application add the official dependency:
 {% highlight xml %}
 <dependency>
@@ -137,7 +137,7 @@ For Spring Boot application add the official dependency:
 {% endhighlight %}
 
 
-### Use properties section for all dependency versions
+## Use properties section for all dependency versions
 In pom.xml:
 {% highlight xml %}
 <properties>
@@ -153,7 +153,7 @@ After that, use this variable in the dependency version:
 {% highlight xml %}
 <version>${spring.version}</version>
 {% endhighlight %}
-### Don't forget useful readme.md
+## Don't forget useful readme.md
 Describe how you can build and run the application:
 {% highlight console %}
 mvn clean package -D maven.test.skip=true // without tests running
@@ -181,7 +181,7 @@ Describe all environment variables that your application need:
 1. APP_PORT
 1. JDBC_DATABASE
 
-### Parametrize application.yaml and use profiles
+## Parametrize application.yaml and use profiles
 
 {% highlight yaml %}
 spring:
@@ -234,7 +234,7 @@ Choose necessary profile as running arguments:
 {% highlight console %}
 java -jar Application.jar --spring.profiles.active=dev
 {% endhighlight %}
-### Use logback-spring.xml for log configuration.
+## Use logback-spring.xml for log configuration.
 
 For example, if you use a console logger like below:
 {% highlight java %}
@@ -266,7 +266,7 @@ You can print log in JSON format also.
 </configuration>
 {% endhighlight %}
 
-### Use Swagger
+## Use Swagger/OpenApi
 
 {% highlight java %}
 /**
@@ -339,7 +339,7 @@ If you use @EnableWebMvc in your application, add ResourceHandlers:
   } 
 {% endhighlight %}
 
-### Check JavaDoc comments and package-info.java file
+## Check JavaDoc comments and package-info.java file
 {% highlight java %}
 /**
   * This is a main package.
@@ -350,7 +350,7 @@ package io.github.bocharoviliyav.app;
 You can use the IDEA plugin for primitive JavaDoc generation: install JavaDoc by Sergey Timofiychuk
 and in the Java file press Ctrl+Alt+Shift+G
 
-### Check your code 
+## Check your code 
 Use CheckStyle, Sonarqube.
 
 For IDEA CheckStyle plugin exists. 
