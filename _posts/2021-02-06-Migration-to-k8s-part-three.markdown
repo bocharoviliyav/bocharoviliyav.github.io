@@ -27,11 +27,11 @@ We can start our application with additional JVM params:
 
 **-XX:ReservedCodeCacheSize** sets maximum code cache size. Used for JIT compiler.
 
-**-XX:CodeCacheMinimumFreeSpace** parameter sets minimum code cache size.
+**-XX:CodeCacheMinimumFreeSpace** parameter sets minimum code cache size. When less than the specified amount of space remains, stop compiling. This space is reserved for code that is not compiled methods, for example, native adapters.
 
 **-XX:CodeCacheExpansionSize** sets code cache expansion size.
 
-**-XX:+UseG1GC** enables G1 GC instead of the default.
+**-XX:+UseG1GC** (**-XX:+UseParallelGC** , **-XX:+UseConcMarkSweepGC**, **-XX:+UseZGC** , **-XX:+UseShenandoahGC**) enables G1 (Parallel, CMS, Z, Shenandoah) GC instead of the default.
 
 **-XX:MaxGCPauseMillis** sets the target for the maximum GC pause time. JVM can exceed this target.
 
@@ -39,7 +39,7 @@ We can start our application with additional JVM params:
 
 **-XX:ConcGCThreads** sets the number of threads used for concurrent phases.
 
-**-XX:InitiatingHeapOccupancyPercent** sets percentage of the heap occupancy to start a concurrent GC cycle.
+**-XX:InitiatingHeapOccupancyPercent** sets the percentage of the heap occupancy to start a concurrent GC cycle.
 
 **-XX:MetaspaceSize** when the space committed for class metadata reaches this value, a Full GC starts.
 
