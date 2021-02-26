@@ -1,4 +1,4 @@
-importScripts('https://storage.googleapis.com/workbox-cdn/releases/6.0.2/workbox-sw.js');
+importScripts('/assets/js/workbox-sw.js');
 
 self.addEventListener('fetch', (event) => {
     if (event.request.url.endsWith('.webp') || event.request.url.endsWith('.css') || event.request.url.endsWith('.webm')) {
