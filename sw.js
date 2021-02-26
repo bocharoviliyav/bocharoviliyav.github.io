@@ -1,4 +1,4 @@
-importScripts('/assets/js/workbox-sw.js');
+self.importScripts('/assets/js/workbox-sw.js');
 
 self.addEventListener('fetch', (event) => {
     if (event.request.url.endsWith('.webp') || event.request.url.endsWith('.css') || event.request.url.endsWith('.webm')) {
