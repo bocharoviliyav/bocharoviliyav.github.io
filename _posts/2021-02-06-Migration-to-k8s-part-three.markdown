@@ -19,6 +19,8 @@ Let's see how we can change the default settings of JVM.
 
 We can start our application with additional JVM params:
 
+**-Djava.security.egd=file:/dev/./urandom** [see](https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4705093).
+
 **-Xms** parameter sets the initial heap size.
 
 **-Xmx** sets the maximum heap size.
