@@ -12,10 +12,9 @@ Hi all! My name is Ilia Bocharov.
 I'm a full-stack developer.
 My main programming language is Java. I've been writing code on Java since 2015.
 In 2018, I started to write on Typescript, and I'm very excited about it.
-I'm currently learning Rust and improving my Java skills.
-I've about three years of work with containerized applications.
-At the start, I've to use OpenShift + Jenkins + Docker + Java 8/11 or Angular 7/8.
-Now I work with Kubernetes + Gitlab + Docker + Java 8.
-I've experienced with Grafana, Prometheus, ELK stack, Jenkins, Nexus, Nginx.
+I'm currently learning to Go and improving my Java skills.
+Since 2018 I work with containerized applications.
+I've used Java 8/11, Angular 7/8, React, Docker, OpenShift, Kubernetes, Rancher,
+Gitlab CI, Bamboo, Jenkins, Oracle, Postgres, Mysql.
+I've experience with Grafana, Prometheus, ELK stack, Nexus, Nginx.
 I will share part of my knowledge here.
-
