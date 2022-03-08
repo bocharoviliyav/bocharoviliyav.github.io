@@ -6,7 +6,7 @@ categories: Kotlin
 ---
 
 {% highlight kotlin %}
-package com.natera.swaggerhub
+package blog.bocharoviliyav.swaggerhub
 
 import okhttp3.*
 import org.gradle.api.DefaultTask
