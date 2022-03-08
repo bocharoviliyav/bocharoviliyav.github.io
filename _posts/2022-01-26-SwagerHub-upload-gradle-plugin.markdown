@@ -3,6 +3,7 @@ layout: post
 title:  "SwaggerHub upload gradle plugin"
 date:   2022-01-27 01:00:00 +0400
 categories: Kotlin
+published: false
 ---
 
 {% highlight kotlin %}
@@ -162,5 +163,3 @@ private val token: String
 
 That's all!
 The source code of this example is available on [Github](https://github.com/bocharoviliyav/).
-
-
