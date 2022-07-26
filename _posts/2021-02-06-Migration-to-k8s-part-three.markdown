@@ -15,6 +15,10 @@ In this case, JVM 10: uses a Serial GC if a machine has less than two available 
 sets a large amount of memory reservation for the code cache;
 uses a bigger thread stack size than necessary, etc.
 
+JVM memory consumption can be calculated using this formula:
+
+**JVM memory = Heap memory + Metaspace + CodeCache + (ThreadStackSize * Number of Threads) + DirectByteBuffers + Jvm-native**
+
 Let's see how we can change the default settings of JVM.
 
 We can start our application with additional JVM params:
