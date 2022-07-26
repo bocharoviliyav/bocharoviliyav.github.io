@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "SwaggerHub upload gradle plugin"
+title:  "SwaggerHub upload Gradle plugin"
 date:   2022-01-27 01:00:00 +0400
 categories: Kotlin
 published: true
