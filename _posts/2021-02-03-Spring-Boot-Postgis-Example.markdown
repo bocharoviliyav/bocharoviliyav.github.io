@@ -3,6 +3,7 @@ layout: post
 title:  "Spring Boot and PostGIS"
 date:   2021-02-03 17:51:00 +0400
 categories: Java
+tags: Java Spring Boot PostgreSQL PostGIS Docker
 ---
 If you need to keep geo-data in the PostgreSQL database, you may use the PostGIS extension.
 

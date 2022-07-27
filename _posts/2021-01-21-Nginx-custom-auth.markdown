@@ -3,6 +3,7 @@ layout: post
 title:  "Custom authorization implementation in Keycloak using Nginx"
 date:   2021-01-21 23:37:26 +0400
 categories: DevOps
+tags: KeyCloak Nginx Lua Docker
 ---
 
 This topic would be multipurpose. I want to tell you about a powerful web-server, script programming language, and an identity provider.

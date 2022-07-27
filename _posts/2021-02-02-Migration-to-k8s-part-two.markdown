@@ -3,6 +3,7 @@ layout: post
 title:  "Migration Java application to Kubernetes. Monolith"
 date:   2021-02-03 00:03:00 +0400
 categories: Java
+tags: Java k8s Kubernetes Docker Tomcat Prometheus Micrometer
 ---
 This article is the thoughts about additional steps that need for monolith installation in k8s.
 

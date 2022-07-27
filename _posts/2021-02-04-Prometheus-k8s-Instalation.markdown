@@ -3,6 +3,7 @@ layout: post
 title:  "Grafana and Prometheus Kubernetes installation"
 date:   2021-02-04 23:42:00 +0400
 categories: DevOps
+tags: k8s Kubernetes Docker Prometheus Micrometer Grafana Helm
 ---
 In this section, I'll show you how to install Prometheus and Grafana in the k8s cluster using Helm (k8s package manager).
 

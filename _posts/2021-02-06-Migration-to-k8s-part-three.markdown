@@ -3,6 +3,7 @@ layout: post
 title:  "Migration Java application to Kubernetes. JVM optimisation"
 date:   2021-02-06 00:03:00 +0400
 categories: Java
+tags: Java k8s Kubernetes Docker NMT JVM
 ---
 This is the third part of the k8s migration articles. There are some things about JVM performance monitoring and optimization here.
 In the k8s, Java applications usually run without any JVM configurations or with just like this one:

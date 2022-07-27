@@ -4,7 +4,7 @@ title: Author
 permalink: /about/
 description: Bocharov Ilia - Full-stack Developer | Java, Typescript, Kubernetes, Docker
 ---
-<img src="/assets/images/about/img.webp" alt="Bocharov Ilia" width="204" height="358"/>
+<img src="/assets/images/about/img.webp" alt="Bocharov Ilia" width="1280" height="1031"/>
 
 Hi all! My name is Ilia Bocharov.
 

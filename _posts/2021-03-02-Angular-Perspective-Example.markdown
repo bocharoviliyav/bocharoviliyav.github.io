@@ -3,6 +3,7 @@ layout: post
 title:  "Using Perspective in Angular"
 date:   2021-03-02 01:00:00 +0400
 categories: Angular
+tags: Angular JavaScript TypeScript 
 ---
 In this article, I'd like to submit the tiny guide for Perspective usage in the Angular application.
 Perspective is the powerful data visualization component. It is based on JS + WebAssebmly or Python, supports Apache Arrow, CSV, JSON formats. 
